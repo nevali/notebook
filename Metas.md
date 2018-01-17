@@ -1,6 +1,6 @@
 # Metas
 
-* A conversational agent built on [Ceiba](Ceiba.md) and [Grid](Grid.md)
+* A [conversational agent](https://en.wikipedia.org/wiki/Dialog_system) built on [Ceiba](Ceiba.md) and [Grid](Grid.md)
 * Nodes owned by the same (Ceiba) identity can communicate with one another and share resources (e.g., ask Metas to launch an application on your laptop from your phone, opening a document can transport it if needed)
 * Grid searches are filtered/scaled by the social graph as a reliability metric (+ configurable trusted sources)
 * Skills are plug-ins that can provide new capabilities. Skills are installed automatically, and are silent if not available due to missing underlying capabilities (e.g., a skill to allow discovery of devices via Bluetooth would be auto-disabled if no Bluetooth interface was available)
