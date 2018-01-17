@@ -1,6 +1,6 @@
 # Monsters!
 
-https://github.com/twisterdflick/monsters
+https://github.com/twistedflick/monsters
 
 _Monsters!_ is based upon a simplified form of genetics. Loosely.
 
