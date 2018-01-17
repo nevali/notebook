@@ -2,7 +2,7 @@
 
 * Process manager, can be used privileged or unprivileged.
 * Sessions are restarted automatically when needed, including on reboot.
-* Processes are run under `screen`, so sessions can be attached-to at any time
+* Processes are run under [`screen`](https://www.gnu.org/software/screen/manual/screen.html), so sessions can be attached-to at any time
 * Sessions are given names (within the scope of the user) 
 * As an unprivileged user, invoking with the '-g' (global) option will trigger re-execution of the command via `sudo`
 * At boot-time, there are separate init-scripts for launching global versus user sessions (for different runlevels/checkpoints)
