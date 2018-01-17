@@ -316,15 +316,3 @@ For desktops and servers, the envisaged deployment scenario is as a dom0 kernel 
 On more constrained systems, a hypervisor may not be feasible, and instead Odin runs on bare-metal. On systems without an MMU, a different memory manager could be employed—or even left to the rudimentary management Odin itself performs.
 
 Odin is intended to be small, portable and extensible enough to be able to form a useful basis for operating systems running on everything from IoT devices to midrange and mainframe systems.
-
-## License
-
-Copyright © 2017 Mo McRoberts.
-
-[`BuildScripts/get-version.sh`](BuildScripts/get-version.sh) is also Copyright © 2014 BBC.
-
-Licensed under the terms of the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
-
-[travis]: https://img.shields.io/travis/TaliskerPlatform/Odin.app.svg
-[license]: https://img.shields.io/badge/license-Apache%202.0-blue.svg
-[language]: https://img.shields.io/badge/implemented%20in-C-yellow.svg
