@@ -9,6 +9,8 @@
   * A decision is a question or query, accompanied by a set of options, a recommendation based upon available facts, and an optional outcome (which option was chosen)
   * Decision records are used by Metas instances to bias their own recommendations based upon past behaviours (with emphasis on those with closer social connections)
 
+## First run
+
 ```
 Hello, my name is Metas. If you would like, I can speak out loud to you as well.
 
@@ -22,9 +24,9 @@ Would you like to choose what kind of voice I have?
 
 70% of people seem to prefer the British female voice. 
 
-If you would like to use the British female voice, just say 'that's fine'. If you'd rather choose, just say 'a different one'.
+If you would like me to use the British female voice, just say 'that's fine'. If you'd rather choose, just say 'a different one'.
 
-> that's fine, thanks
+> that's great, thanks
 
 Hi. How does that sound?
 
