@@ -1,5 +1,7 @@
 # Notebook
 
+* [Jyuzau](Jyuzau.md)
+* [Monsters!](Monsters.md)
 * [Hyperscape](Hyperscape.md)
 * [atomic.js](atomic.js.md)
 * [Metas](Metas.md)
