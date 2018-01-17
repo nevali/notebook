@@ -10,4 +10,4 @@ Lowest-level components are _native_ (i.e., interface directly with the kernel, 
 
 Higher-level components provide a language-agnostic OOP interface (via COM interfaces) 
 
-Aspects inspired by NeXTSTEP, Taligent, Workplace OS, NTOS
+Aspects inspired by NeXTSTEP, Taligent, Workplace OS, NTOS, BeOS
