@@ -16,7 +16,7 @@ RES's purpose is to construct a knowledgebase of Linked Open Data, a reasonable 
 
 ## liburi
 
-## libawsclient
+## libawsclient
 
 ## libsparqlclient
 
