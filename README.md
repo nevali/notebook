@@ -1,6 +1,7 @@
 # Notebook
 
 * [CryptoDNS](CryptoDNS.md)
+* [Acropolis](Acropolis.md)
 * [Talisker](Talisker.md)
   * [Flow](Flow.md)
   * [Odin](Odin.md)
