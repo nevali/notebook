@@ -1,8 +1,8 @@
 # Acropolis
 
-https://github.com/bbcarchdev/acropolis
-https://bbcarchdev.github.io/res/
-https://acropolis.org.uk/
+* https://github.com/bbcarchdev/acropolis
+* https://bbcarchdev.github.io/res/
+* https://acropolis.org.uk/
 
 # Introduction
 
