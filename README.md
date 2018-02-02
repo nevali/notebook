@@ -56,6 +56,7 @@
 
 1. Hutton, L., Henderson, T.: [Beyond the EULA: Improving consent for data mining](https://arxiv.org/abs/1701.07999) (2017). arXiv:1701.07999.
 2. Thompson, M.: [Inter-Process Communication](http://nshipster.com/inter-process-communication/) (2014). In: [NSHipster](http://nshipster.com).
+3. "[stuart](http://blogs.bodleian.ox.ac.uk/maps/author/stuart/)": [Two of (nearly) everywhere](http://blogs.bodleian.ox.ac.uk/maps/2018/02/01/two-of-nearly-everywhere/) (2018). In: [Bodleian Map Room Blog](http://blogs.bodleian.ox.ac.uk/maps/).
 
 ### Books
 
