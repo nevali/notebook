@@ -59,3 +59,4 @@
 ### Books & other documents
 
 * Adobe Systems Incorporated: [PostScript Language Reference, Second Edition](https://www.adobe.com/content/dam/acom/en/devnet/actionscript/articles/psrefman.pdf) (1990). _Includes Display PostScript extensions removed in the third edition_.
+* Adobe Systems Incorporated: [PostScript Language: Tutorial and Cookbook](https://www-cdf.fnal.gov/offline/PostScript/BLUEBOOK.PDF) (1985). _The PostScript "blue book"._
