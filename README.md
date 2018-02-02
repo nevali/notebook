@@ -9,8 +9,8 @@
   * [Low-level tooling](#low-level-tooling)
 * [Bookmarks](#bookmarks)
   * [Software & services](#software--services)
-  * [Papers](#papers)
-  * [Books & other documents](#books--other-documents)
+  * [Papers & articles](#papers--articles)
+  * [Books](#books)
 
 ## Projects
 
@@ -52,11 +52,12 @@
 
 * [TimescaleDB](http://www.timescale.com) — Postgres-derived time-series RDBMS
 
-### Papers
+### Papers & articles
 
 1. Hutton, L., Henderson, T.: [Beyond the EULA: Improving consent for data mining](https://arxiv.org/abs/1701.07999) (2017). arXiv:1701.07999.
+2. Thompson, M.: [Inter-Process Communication](http://nshipster.com/inter-process-communication/) (2014). In: [NSHipster](http://nshipster.com).
 
-### Books & other documents
+### Books
 
 * Adobe Systems Incorporated: [PostScript Language Reference, Second Edition](https://www.adobe.com/content/dam/acom/en/devnet/actionscript/articles/psrefman.pdf) (1990). _Includes Display PostScript extensions removed in the third edition_.
 * Adobe Systems Incorporated: [PostScript Language: Tutorial and Cookbook](https://www-cdf.fnal.gov/offline/PostScript/BLUEBOOK.PDF) (1985). _The PostScript "blue book"._
