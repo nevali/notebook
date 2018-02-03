@@ -23,5 +23,5 @@
   * should libcluster (optionally?) gather system stats so that instrumentation can be used for scaling?
     * is there a decent permissive OSS library for reading load averages and so on?
 	* what does [istatd](https://github.com/tiwilliam/istatd) do?
-- [ ] Commit picoc-based Flow interpreter WIP repo
+- [x] Commit picoc-based Flow interpreter WIP repo
   - [ ] Implement scoped identifiers
