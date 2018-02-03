@@ -40,6 +40,12 @@ Client access library for SPARQL-savvy graph stores
 
 Client access library for SQL databases
 
+## [libcluster](https://github.com/bbcarchdev/libcluster)
+
+Self-balancing cluster library
+
+* Add support for https://github.com/i-scream/libstatgrab?
+
 ## [libsupport](https://github.com/bbcarchdev/libsupport)
 
 Should be renamed to `libappconfig` and have logging elements removed (replaced with [`liblogging`](https://github.com/rsyslog/liblogging))
