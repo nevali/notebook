@@ -20,67 +20,59 @@ RES's purpose is to construct a knowledgebase of Linked Open Data, a reasonable 
 
 # Components
 
-## m4
+## [m4](https://github.com/bbcarchdev/m4)
 
-* https://github.com/bbcarchdev/m4
+Build system support macros
 
-Build system support macros.
+## [liburi](https://github.com/bbcarchdev/liburi)
 
-## liburi
+URI parsing and manipulation library
 
-* https://github.com/bbcarchdev/liburi
+## [libawsclient](https://github.com/bbcarchdev/libawsclient)
 
-URI parsing and manipulation
+Client access library for services speaking AWS protocols
 
-## libawsclient
+## [libsparqlclient](https://github.com/bbcarchdev/libsparqlclient)
 
-* https://github.com/bbcarchdev/libawsclient
+Client access library for SPARQL-savvy graph stores
 
-## libsparqlclient
+## [libsql](https://github.com/bbcarchdev/libsql)
 
-* https://github.com/bbcarchdev/libsparqlclient
+Client access library for SQL databases
 
-SPARQL client access library
-
-## libsql
-
-* https://github.com/bbcarchdev/libsql
-
-SQL client access library
-
-## libsupport
-
-* https://github.com/bbcarchdev/libsupport
+## [libsupport](https://github.com/bbcarchdev/libsupport)
 
 Should be renamed to `libappconfig` and have logging elements removed (replaced with [`liblogging`](https://github.com/rsyslog/liblogging))
 
-## Anansi
-
-* https://github.com/bbcarchdev/anansi
+## [Anansi](https://github.com/bbcarchdev/anansi)
 
 Web crawler
 
-## Twine
+## [Twine](https://github.com/bbcarchdev/twine)
 
-* https://github.com/bbcarchdev/twine
+RDF-oriented workflow processing server
 
-RDF workflow processing server
-
-## Quilt
-
-* https://github.com/bbcarchdev/quilt
+## [Quilt](https://github.com/bbcarchdev/quilt)
 
 Linked Data server
 
-## Spindle
+* Support `GET` requests including a structured request payload? (JSON?)
+  * Can this be implemented without breaking caching? Is there a `Vary: body`?
+  * More trouble than it's worth?
+  * Should be a `POST`? But then breaks semantics?
+* Other HTTP methods should be at least _handled_; it should then be up to the engine to decide what to do.
+  * e.g., [Patchwork](#patchwork) could accept S/MIME-signed `PUT` requests to enqueue graphs for processing?
+* Configurable routing (e.g., send different URI patterns to different engines)
+  * Incoming URI and query-parameter transformation
+  * It should be straightforward to implement this with neglible loss of efficiency
 
-* https://github.com/bbcarchdev/spindle
+## [Spindle](https://github.com/bbcarchdev/spindle)
 
-Knowledgebase processing engine for [Twine](#twine)
+Knowledge-base processing engine for [Twine](#twine)
 
-## Patchwork
+## [Patchwork](https://github.com/bbcarchdev/patchwork)
 
+Knowledge-base server engine for [Quilt](#quilt)
 
-* https://github.com/bbcarchdev/patchwork
-
-Knowledgebase server engine for [Quilt](#quilt)
+* Add support for multiple `?uri=URI` query-parameters, return a single RDF doc containing all of the requested entities.
+  * Add a configurable soft-limit for the number of URIs which will be processed in a single query
