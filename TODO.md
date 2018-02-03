@@ -24,5 +24,5 @@
     * is there a decent permissive OSS library for reading load averages and so on?
 	* what does [istatd](https://github.com/tiwilliam/istatd) do?
 - [x] Commit picoc-based Flow interpreter WIP repo
-  - [ ] Tidy up sources, add build machinery, Travis config
+  - [x] Tidy up sources, add build machinery, Travis config
   - [ ] Implement scoped identifiers
