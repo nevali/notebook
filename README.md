@@ -63,15 +63,15 @@
 1. Hutton, L., Henderson, T.: [Beyond the EULA: Improving consent for data mining](https://arxiv.org/abs/1701.07999) (2017). arXiv:1701.07999.
 2. Thompson, M.: [Inter-Process Communication](http://nshipster.com/inter-process-communication/) (2014). In: [NSHipster](http://nshipster.com).
 3. "[stuart](http://blogs.bodleian.ox.ac.uk/maps/author/stuart/)": [Two of (nearly) everywhere](http://blogs.bodleian.ox.ac.uk/maps/2018/02/01/two-of-nearly-everywhere/) (2018). In: [Bodleian Map Room Blog](http://blogs.bodleian.ox.ac.uk/maps/).
-4. Settle, M: [How to improve your mojo skills by sacrificing a latte](http://www.bbc.co.uk/blogs/academy/entries/fafb0b78-b9cf-4218-81ec-b3f109d85225) (2018). In: [The BBC Academy Blog](http://www.bbc.co.uk/blogs/academy)
-5. Mittal, N: [Abusing DNSAdmins privilege for escalation in Active Directory](http://www.labofapenetrationtester.com/2017/05/abusing-dnsadmins-privilege-for-escalation-in-active-directory.html) (2017). In: [Lab of a Penetration Tester](http://www.labofapenetrationtester.com/)
-6. Hon, D: [No one’s coming. It’s up to us.](https://medium.com/@hondanhon/no-ones-coming-it-s-up-to-us-de8d9442d0d) (2018). In [medium.com/@handanhon](https://medium.com/@hondanhon).
+4. Settle, M.: [How to improve your mojo skills by sacrificing a latte](http://www.bbc.co.uk/blogs/academy/entries/fafb0b78-b9cf-4218-81ec-b3f109d85225) (2018). In: [The BBC Academy Blog](http://www.bbc.co.uk/blogs/academy)
+5. Mittal, N.: [Abusing DNSAdmins privilege for escalation in Active Directory](http://www.labofapenetrationtester.com/2017/05/abusing-dnsadmins-privilege-for-escalation-in-active-directory.html) (2017). In: [Lab of a Penetration Tester](http://www.labofapenetrationtester.com/)
+6. Hon, D.: [No one’s coming. It’s up to us.](https://medium.com/@hondanhon/no-ones-coming-it-s-up-to-us-de8d9442d0d) (2018). In [medium.com/@handanhon](https://medium.com/@hondanhon).
 7. [Law students offer free legal advice to Glasgow shoppers](http://www.bbc.co.uk/news/uk-scotland-glasgow-west-43046133) (2018). In [BBC Scotland News - Glasgow & West](http://www.bbc.co.uk/news/scotland/glasgow_and_west).
 8. "villain of the story": [Just what is ISOMETRIC](http://www.rpgcodex.net/forums/index.php?threads/just-what-is-isometric.69829/) (2012). In [rpg codex](http://www.rpgcodex.net/forums/index.php?forums/general-rpg-discussion.4/).
 9. [Axonometric projections - a technical overview](https://www.compuphase.com/axometr.htm) (2009). In [Advanced Game Programming](https://isbnsearch.org/isbn/9781598638066), ISBN: 9781598638066.
-10. Koncewicz, R: [A Layman’s Guide To Projection in Videogames](http://www.significant-bits.com/a-laymans-guide-to-projection-in-videogames/) (2009). In: [Significant Bits](http://www.significant-bits.com).
+10. Koncewicz, R.: [A Layman’s Guide To Projection in Videogames](http://www.significant-bits.com/a-laymans-guide-to-projection-in-videogames/) (2009). In: [Significant Bits](http://www.significant-bits.com).
 11. [Green finance for dirty ships](https://www.economist.com/news/finance-and-economics/21718519-new-ways-foot-hefty-bill-making-old-ships-less-polluting-green-finance) (2017). In [The Economist](https://www.economist.com).
-12. Norton, Q: [Anonymous 101: Introduction to the Lulz](https://www.wired.com/2011/11/anonymous-101/) (2011). In [Wired](https://www.wired.com/)
+12. Norton, Q.: [Anonymous 101: Introduction to the Lulz](https://www.wired.com/2011/11/anonymous-101/) (2011). In [Wired](https://www.wired.com/)
 
 ### Books
 
