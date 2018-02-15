@@ -40,7 +40,7 @@
 
 ### Web+apps
 
-* [atomic.js](atomic.js.md)
+* ~atomic.js~ (see [nativefier](https://github.com/jiahaog/nativefier) instead)
   
 ### Low-level tooling
   
@@ -54,6 +54,9 @@
 * [pkgconf](https://github.com/pkgconf/pkgconf) - pkg-config clone/superset (MIT-licensed)
 * [Yabasic](http://www.yabasic.de) - Yet another Basic
 * [Berkeley Logo](http://people.eecs.berkeley.edu/~bh/logo.html) - Old and buggy but salvageable as a cross-platform app?
+* [nativeifer](https://github.com/jiahaog/nativefier) - SSB generator
+* [gPRC](https://grpc.io/docs/) - Google's lightweight RPC system
+* [Protocol Buffers](https://developers.google.com/protocol-buffers/) - Google's network-transparent encoding system
 
 ### Papers & articles
 
@@ -67,6 +70,8 @@
 8. "villain of the story": [Just what is ISOMETRIC](http://www.rpgcodex.net/forums/index.php?threads/just-what-is-isometric.69829/) (2012). In [rpg codex](http://www.rpgcodex.net/forums/index.php?forums/general-rpg-discussion.4/).
 9. [Axonometric projections - a technical overview](https://www.compuphase.com/axometr.htm) (2009). In [Advanced Game Programming](https://isbnsearch.org/isbn/9781598638066), ISBN: 9781598638066.
 10. Koncewicz, R: [A Layman’s Guide To Projection in Videogames](http://www.significant-bits.com/a-laymans-guide-to-projection-in-videogames/) (2009). In: [Significant Bits](http://www.significant-bits.com).
+11. [Green finance for dirty ships](https://www.economist.com/news/finance-and-economics/21718519-new-ways-foot-hefty-bill-making-old-ships-less-polluting-green-finance) (2017). In [The Economist](https://www.economist.com).
+12. Norton, Q: [Anonymous 101: Introduction to the Lulz](https://www.wired.com/2011/11/anonymous-101/) (2011). In [Wired](https://www.wired.com/)
 
 ### Books
 
