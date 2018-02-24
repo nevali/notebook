@@ -1,19 +1,19 @@
 # Ding!
 
 1. Simple scene loader
-  * XML-based scene format, specifies primitive (including lights) locations and scales only
-  * Just parses and outputs
-  * Autotools
-  * Travis CI
-  * Add XML namespace
-  * l10n with expanded error messages containing explanations (simplified fallbacks in code)
-2. Composite (group) objects
-3. Primitive transforms & translation
+  * [x] XML-based scene format, specifies primitive (including lights) locations and scales only
+  * [x] Just parses and outputs
+  * [x] Autotools
+  * [x] Travis CI
+  * [x] Add XML namespace
+  * [ ] l10n with expanded error messages containing explanations (simplified fallbacks in code)
+2. ~Composite (group) objects~
+3. ~Primitive transforms & translation~
 4. Group transforms & translations
 5. Includes/reuse of composite obects (via `xlink:href` and `xml:id`)
-  * Reference-counted scene objects
-  * Unresolved object dereferencing pass
-  * Copy constructors/duplicators
+  * [x] Reference-counted scene objects
+  * [ ] Unresolved object dereferencing pass
+  * [ ] Copy constructors/duplicators
 6. SDL-based scene viewer
   * Fixed camera & viewport/FOV scale
   * Cross-platform skeleton (generate Xcode and VS projects)
