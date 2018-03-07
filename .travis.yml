@@ -1,10 +1,15 @@
 language: generic
 dist: trusty
+sudo: required
 addons:
   apt:
     packages:
-    - pandoc
     - openssl
+    - pandoc
+    - wget
+before_script:
+- wget https://github.com/jgm/pandoc/releases/download/2.1.2/pandoc-2.1.2-1-amd64.deb
+- sudo dpkg -i pandoc-2.1.2-1-amd64.deb
 script: bash deploy/travis-build.sh
 env:
   global:
