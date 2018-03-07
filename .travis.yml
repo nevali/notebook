@@ -1,10 +1,12 @@
-language: c
+language: generic
 dist: trusty
-sudo: required
-
-before_script:
-- sudo apt-get update -qq && \
-  sudo apt-get install pandoc git openssl
-
-script:
-- $(MAKE) autobuild
+addons:
+  apt:
+    packages:
+    - pandoc
+    - openssl
+script: bash deploy/travis-build.sh
+env:
+  global:
+  - ENCRYPTION_LABEL: "143974d01293"
+  - COMMIT_AUTHOR_EMAIL: "mo@neva.li"
