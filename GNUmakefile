@@ -1,6 +1,9 @@
 OUTPUT = public_html
 OUTPUT_REPO = git@github.com:nevali/notebook.git
+OUTPUT_BRANCH = gh-pages
 SOURCE = src
+SOURCE_REPO = git://github.com/nevali/notebook.wiki.git
+SOURCE_BRANCH = master
 STATIC = static
 EXCLUDE = _%.md
 SOURCEFILES = $(filter-out $(EXCLUDE),$(patsubst $(SOURCE)/%,%,$(wildcard $(SOURCE)/*.md)))
@@ -25,10 +28,8 @@ env:
 	@env
 
 autobuild:
-	@cd $(OUTPUT) && \
-		git reset --hard && \
-		git checkout -f gh-pages && \
-		git pull origin gh-pages
+	@git clone -b $(SOURCE_BRANCH) $(SOURCE_REPO) $(SOURCE)
+	@git clone -b $(OUTPUT_BRANCH) $(OUTPUT_REPO) $(OUTPUT)
 	@$(MAKE) clean
 	@$(MAKE) all
 	@cd $(OUTPUT) && \

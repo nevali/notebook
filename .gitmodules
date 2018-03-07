@@ -1,8 +1,0 @@
-[submodule "public_html"]
-	path = public_html
-	url = git://github.com/nevali/notebook.git
-	branch = gh-pages
-[submodule "src"]
-	path = src
-	url = git://github.com/nevali/notebook.wiki.git
-	branch = master
