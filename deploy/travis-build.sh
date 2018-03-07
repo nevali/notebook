@@ -23,7 +23,4 @@ chmod 600 deploy/deploy_key
 eval `ssh-agent -s`
 ssh-add deploy/deploy_key
 
-make
-
-# Now that we're all set up, we can push.
-git push $SSH_REPO $TARGET_BRANCH
+make autobuild
