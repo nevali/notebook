@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en-GB"  dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>CryptoDNS • Mo McRoberts | Music • Broadcasting • Technology</title>
+  <link rel="stylesheet" href="https://neva.li/common/styles.css">
+</head>
+<body>
+<header>
+<h1 class="title">Mo McRoberts</h1>
+<h2 class="subtitle">Music • Broadcasting • Technology</h2>
+</header>
+<main>
+<section class="wiki">
+<h1>CryptoDNS</h1>
+<h1 id="cryptodns">CryptoDNS</h1>
+<p>Originally at <a href="https://neva.li/post/2414852675" class="uri">https://neva.li/post/2414852675</a></p>
+<p>I had an idea recently, on the back of something I came up with a while ago.</p>
+<p>In a nutshell, it’s a dynamic DNS service, not a million miles away from DynDNS, but it has a few crucial differences:</p>
+<ul>
+<li>you don’t need to register anything to use it</li>
+<li>you don’t get to choose the domain name — one is generated for you</li>
+<li>the domain names are nonetheless predictable</li>
+<li>you can only provide <code>SRV</code> and <code>TXT</code> records in the form <code>_service._proto.assigneddomain</code></li>
+</ul>
+<p>The way it works is this:</p>
+<ul>
+<li>We agree on a public key-based algorithm. Something like RSA, perhaps.</li>
+<li>Everything that needs to (people, hosts, individual pieces of software) can generate a keypair.</li>
+<li>All write requests to the service are signed with the private key.</li>
+<li>The assigned (generated) domain name has the form <code>sequence.key-id.suffix</code>.</li>
+<li><code>key-id</code> is the first 32 or 64-bits of a hash (say, SHA-256) of the public key.</li>
+<li>A <code>TXT</code> record is associated with the domain name <code>key-id.suffix</code>, containing the full public key and sequence value for each of the keys which reduce to that <code>key-id</code> (though in the majority of cases, there will probably only be one).</li>
+</ul>
+<p>Given a service operating this way, something or somebody can obtain an (admittedly ugly) domain name, register records for services beneath it, and relay it to others. For example, an XMPP server running behind NAT could generate a key for itself, obtain a domain name, perform a port mapping via UPnP, register <code>_xmpp-server</code> <code>SRV</code> records pointing at its public IP, and publish JIDs ending in <code>@seq.key-id.suffix</code>.</p>
+<p>In a similar vein, given an SSH host’s public key, you could locate that host’s public IP (assuming it has one) and establish a connection—this could all be automated, by for example reading the information in <code>~/.ssh/known_hosts</code>. Of course, such things would need a list of <code>suffix</code> values — i.e., the domain names of services providing this facility — but that could be a configurable option with some well-known defaults.</p>
+</section>
+</main>
+</body>
+</html>

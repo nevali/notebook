@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en-GB"  dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Odin • Mo McRoberts | Music • Broadcasting • Technology</title>
+  <link rel="stylesheet" href="https://neva.li/common/styles.css">
+</head>
+<body>
+<header>
+<h1 class="title">Mo McRoberts</h1>
+<h2 class="subtitle">Music • Broadcasting • Technology</h2>
+</header>
+<main>
+<section class="wiki">
+<h1>Odin</h1>
+<h1 id="odin">Odin</h1>
+<p>The <a href="https://github.com/TaliskerPlatform/">Talisker</a> <a href="https://en.wikipedia.org/wiki/Microkernel#Nanokernel">nanokernel</a>.</p>
+<h2 id="introduction">Introduction</h2>
+<p>Odin is the Talisker nanokernel. On its own, it’s somewhat less useful than MS-DOS. It has no memory protection or virtual memory, no multitasking, absolutely minimal hardware abstraction, and barely any I/O capabilities.</p>
+<p>It does, however, incorporate a console, the ability to spawn tasks in the form of ELF executables, use a bootloader-provided <code>ar</code>-format archive as a simple RAMdisk, and defines the interfaces between components of the system, as well as the means of communicating with them and replacing them on the fly.</p>
+<p>The &quot;replacing them on the fly&quot; aspect is intrinsic to the operation of the system: memory protection and virtual memory are provided by a separate application. When it’s executed as a privileged process (such as when the system is first booted and no memory protection is in place yet), Odin provides the interface that it can use to register itself as the arbiter of the address space—and with exclusive control over the mapping and protection levels of the various regions that are in use.</p>
+<p>The same applies to process scheduling: Odin itself provides a single-tasking environment, but has a conceptual view of tasks and threads and provides the mechanisms to interact with them. However, the built-in implementation of a process scheduler will only ever run one thread at a time, and it will continue to execute until it reaches its conclusion. Similarly to the memory manager, the process scheduler can be loaded, and it will take responsibility for the multitasking features of the system.</p>
+<p>Access to privileged CPU contexts and address space is governed by the process scheduler and memory manager. This means that it can be granted as needed, rather than having separate kinds of executable — kernel modules or extensions, versus ordinary daemons.</p>
+<p>While care must be taken in user-space to ensure that rogue applications aren’t able to wreak havoc, the same applies to any modern operating system with a modular kernel.</p>
+<h3 id="kernel-objects-and-system-calls">Kernel objects and system calls</h3>
+<p>All Odin objects follow the COM patterns and binary interface rules. Within the context of a task, file descriptors — or rather <em>object descriptors</em> — are actually just reference-counted handles to COM interface pointers. Under normal circumstances, descriptors 0, 1, and 2 would indeed be descriptors to objects which support character I/O calls, just as a file descriptors represent, but in principle any descriptor could refer to any type of object whose internal implementation is in a separate address-space from the user's.</p>
+<p>All system calls take two fixed parameters: a numeric object descriptor, and a method index. Upon a call being despatched within Odin, it locates the interface pointer referred to by that object descriptor, and invokes the function pointer in the interface's method table matching the method index, passing it the remaining system call paramters. As all function pointers in the table are the same size, so the depatch handler can simply treat it as an array of word-returning varargs-accepting function pointers.</p>
+<p>For any interface pointer whose class implementation is within Odin's privileged address space, this <em>marshaling</em> of the method call via a system call interface is easily comparable to any call in a modern operating system which operates on a target object of some kind—particularly filesystem calls, because filesystem interfaces tend to be heavily abstracted to allow for extensibility, such as new filesystem drivers being enabled without recompiling the kernel.</p>
+<h3 id="inter-process-communication">Inter-process communication</h3>
+<p>Where the caller, Odin, and class implementation are in different address spaces, the system call mechanism doubles as a transparent inter-process communication mechanism. Rather than the object descriptor pointing directly to the implementation, it can point to a marshaler instead. A marshaler is a special kind of instance which simply forwards method calls somewhere else and returns whatever the result was back to the caller. In this case, the object descriptor would point to a marshaling instance which passes the call on to the thread which is providing the implementation.</p>
+<p>Indeed, all object descriptors actually point to a marshaler of one sort or another, for two reasons. Most importantly, to insulate reference-counting of the kernel object from user-space reference counting (an object descriptor needs to know when it shouldn’t exist any more, but there can be multiple descriptors in different tasks for the same instance).</p>
+<p>Second, in order to pass parameters which are pointers, or other object descriptors, through a system call boundary, something needs to know which regions of memory constitute parameter buffers, and of course how big they are and how to access them. This applies again, with a little more complexity, when making IPC calls from the privileged context within Odin out to an unprivileged user-space task providing some kind of capability.</p>
+<p>The rules regarding buffer translation differ from interface to interface (because each has different sets of methods accepting different kinds of parameters), but the Talisker IDL compiler will generate the relevant user-space stubs and the data required for Odin's marshaler to do its job properly. All interfaces are identified by a UUID, and Odin's marshaler tracks the UUID of the interface against the pointer it has so that it look up the correct marshaling data for that interface. If the data isn't available, then all method calls except those from <code>IUnknown</code> will fail.</p>
+<h3 id="access-control-at-marshaling-boundaries">Access control at marshaling boundaries</h3>
+<p>The <code>queryInterface()</code> method of <code>IUnknown</code> is implemented by all COM classes; it is guaranteed by the ABI to be the first pointer in the method table, and always have a consistent method signature.</p>
+<p>In Odin’s marshaling scheme, any interface pointer <em>returned</em> by a method call is assigned a new object descriptor whose value is returned to the caller—its own marshaling logic can create a new marhsalling instance wrapped around the newly-returned file descriptor.</p>
+<p>Because of this, any interface pointer returned by a call to <code>queryInterface()</code> will result in a new object descriptor being created for the task.</p>
+<p>Therefore, if the interfaces for read-only versus read-write access are <em>different</em>, then a marshaler within Odin could invoke logic prior to perform access-control checks before the real <code>queryInterface()</code> implementation is invoked.</p>
+<p>In effect, then, within Odin itself, any kind of access control is represented by a principal (some object that requires access to something) and the IID of the interface on the target object to which access should be granted.</p>
+<p>A side-effect of this is that the unit of access control can be almost anything—an interface is simply a set of operations a caller can perform on an object, so it is logical that this <em>is</em> the fundamental unit of access control.</p>
+<h3 id="the-task-descriptor">The task descriptor</h3>
+<p>Every task is always launched with a minimum of one object descriptor assigned to it (although usually more), which points to the task's own interface pointer. This descriptor's marshaler will refuse to allow the descriptor to be closed from user-space; requests to inherit the descriptor into a child process will always fail, although a child process can be given access to the parent's by cloning the task descriptor and marking the resulting interface as being inheritable.</p>
+<h3 id="the-thread-descriptor">The thread descriptor</h3>
+<h3 id="the-object-namespace">The object namespace</h3>
+<p>Any COM object can be placed into the global object namespace by linking it to an object directory container by establishing an in-memory a <em>directory entry</em> instance for it, which represents the name, type, ownership, notional size, and ACLs of the target object within that directory.</p>
+<p>Filesystem operations consist of traversing and manipulating this tree of object directories: Odin provides a transient in-memory root object directory, analogous to the root filesystem in Unix-like systems. This transient directory supports the creation of directory <em>entries</em> to represent running objects, but doesn’t have any capabilities to store any data: in other words, it supports creating subdirectories, symbolic links, device nodes, and so on, but not &quot;real&quot; files.</p>
+<p>Real filesystem implementations provide instances which implement the same object directory interfaces, but whose data is read from disk as needed; mounting a filesystem is therefore a case of initialising a filesystem object (supplying it with the block device object), obtaining its object directory interface, and creating a directory entry for it at the mount-point.</p>
+<p>The root object directory has the following structure:</p>
+<pre><code>/
+    Volumes
+        [mount points are generally created here]
+        [root volume]
+            Local
+                Applications
+                Library
+                    Preferences
+                    Caches
+                    : (see /Volumes/Root/Talisker/Library, below)
+                Users
+                    sara
+                    joe
+                    admin
+                        Applications
+                        Desktop
+                        Pictures
+                        Movies
+                        Music
+                        Downloads
+                        Library
+                            :
+            Talisker
+                Applications
+                    Utilities
+                Library
+                    Preferences
+                    Desktop Pictures
+                    Fonts
+                    Personalities
+                    UserTemplate
+                    Sounds
+                    
+        Boot [initial RAMdisk]
+        Root → [root volume]
+    Devices
+        [device nodes are automatically created here]
+    Local → /Volumes/Root/Local
+    Network
+        Applications → [mounted network share]
+        Library → [mounted network share]
+        Users → [mounted network share]
+        Servers
+            [domain]
+                [share]
+                [host]
+                    [share]
+    Talisker
+        Applications → /Volumes/Root/Talisker/Applications
+        Library → /Volumes/Root/Talisker/Library
+        System
+            Classes
+                [class uuid] → [class factory instance or executable]
+                [name] → [class uuid]
+            Interfaces
+                [uuid]
+                    ImplementedBy
+                        [class uuid]
+            Subsystems
+                [uuid]
+            ContentTypes
+                application
+                    x-unknown
+                        Extensions
+                            bin
+                image
+                    jpeg
+                        Extensions
+                            jpg
+                Extensions
+                    jpg → [MIME type entry for image/jpeg]
+                
+            Tasks
+                me → [link to PID of invoker]
+                [pid]
+                    name
+                    environment
+                    cmdline
+                    state
+                    priority
+                    Threads
+                        [tid]
+                            state
+</code></pre>
+<p>Because objects are polymorphic and are generally-accessible via RPC, the directory entries within <code>/Talisker/System/Tasks</code> refer not to synthesised files in a virtual filesystem, but the Odin’s own representations of each task: &quot;opening&quot; one of those tasks within the directory is actually just obtaining an object descriptor for that task.</p>
+<p>For example, imagine that our IDirectory interface has a <code>resolve</code> method which parses a path, traversing the tree, and returns an IDirectoryEntry interface pointer if one is found. &quot;Opening&quot; the &quot;file&quot; that it refers to is simply a case of calling a method on the directory entry to obtain an interface pointer from the retained object.</p>
+<p>The resolve method might look like this:</p>
+<pre><code>int IDirectory::resolve(const char *path, IDirectoryEntry **result);
+</code></pre>
+<p>while the method to open a directory entry might look like this:</p>
+<pre><code>int IDirectoryEntry::open(const uuid_t iid, void **result);
+</code></pre>
+<p>Given a thread has a current working directory, and a thread can always access its own thread interface via the thread descriptor, a traditional &quot;open&quot; call could look a little like this:</p>
+<pre><code>int
+open(const char *path, int flags, ...)
+{
+    uuid_t iid;
+    IDirectory *cwd;
+    IDirectoryEntry *de;
+    IUnknown *file;
+    
+    /* The access bits determine which interface we&#39;re going to request */
+    if(flags &amp; O_RDWR)
+    {
+        iid = IID_IReadWriteFile;
+    }
+    elif(flags &amp; O_RDONLY)
+    {
+        iid = IID_IReadFile;
+    }
+    else
+    {
+        iid = IID_WriteFile;
+    }
+    
+    /* omitting code to deal with appending, truncating, or creating
+     * new files!
+     */
+
+    /* use the thread API to obtain a reference to the current working directory */
+    if(self-&gt;cwd(&amp;cwd)) 
+    {
+        /* somehow we don&#39;t have a valid CWD */
+        /* errno will be set for us */
+        return -1;
+    }
+    r = cwd-&gt;resolve(path, &amp;de))
+    {
+        /* errno will be set for us */
+        cwd-&gt;release();
+        return -1;
+    }
+    cwd-&gt;release();
+    if(de-&gt;open(iid, (void **) &amp;file))
+    {
+        de-&gt;release();
+        return -1;
+    }
+    de-&gt;release();
+    return self-&gt;descriptor(file);
+}
+</code></pre>
+<h3 id="subsystems">Subsystems</h3>
+<p>Although the sequence above broadly matches what most traditional operating systems do in response to an open() call, it is nevertheless true that if in an Odin-based system each of these calls is an IPC, possibly involving multiple context switches, then performance will probably not compare favourably to other systems for performing similar operations.</p>
+<p>Odin's philosophy is not one of reducing the footprint of the system at the expense of performance or capability, but to reduce the footprint <em>in order to maximise flexibility</em>.</p>
+<p>Rather than that this call sequence necessarily being executed in user-mode, consider that it could be encapsulated into an interface providing a certain API: for example, ISO C’s standard I/O calls.</p>
+<p>While this call <em>could</em> be serviced via a library which is able to run solely in user-mode, there would undoubtedly be a performance increase if an <code>open()</code> call was marshaled via an object descriptor into a method call whose implementation had direct access to the same memory space as Odin's methods that it calls.</p>
+<p>In Odin, the formalised mechanism for achieving this is through <em>subsystems</em>. When executed with sufficient privilege, a subsystem task can request that it be converted to a kernel-mode task (if it isn't already), so that it can avoid context-switch penalties. Once elevated to kernel-mode, a subsystem's existence is advertised via <code>/Talisker/System/Subsystems</code> as well as a method on the task interface.</p>
+<h3 id="advertising-capabilities">Advertising capabilities</h3>
+<p>Classically, clients of COM objects are only aware of the interfaces that they know about, and won't tend to have a preferred list of interfaces which certain objects would ideally support—even if they do, they still need to query for each separately to determine availability.</p>
+<p>Because instances within the namespace are essentially advertising themselves, they also a need a mechanism to advertise what they <em>are</em>—or rather, what interfaces they support.</p>
+<p>To do this, objects can expose the <code>ISupports</code> interface, which provides a single method, <code>supports()</code>, which a client can use to query an instance for what <em>other</em> interfaces it supports (or at least those which it is willing to advertise the availability of).</p>
+<h3 id="interpreters">Interpreters</h3>
+<p>Interpreters are special kinds of proxy classes which allow an object supporting one interface to support another interface that it does not natively support itself.</p>
+<p>For example, an interpreter can be used to allow a JSON file on disk to support being opened and providing a Dictionary (a set of key-value pair) interface, or an image metadata interface be opened on a JPEG image file.</p>
+<p>Interpreters are used to allow files on disk to be executable: all executables supported by a running system, whether they're scripts, binaries, or something else, are executed by way of their IExecutable inteface.</p>
+<p>Interpreters bind a matching rule to a class implementation that they provide and the interface UUID provided by that class: the matching rule is a combination of the UUID of a the interface, and if it's a file, include constraints on file access bits (e.g., is the execute bit set?), or on content type (which may be defined by filename pattern, magic numbers, or present in filesystem metadata).</p>
+<p>They provide a class which implements <code>IInterpreterFactory</code>-a type of class factory which initialises a wrapper around the interface provded.</p>
+<p>For example, a <a href="https://en.wikipedia.org/wiki/Mach-O">Mach-O</a> executable interpreter might register itself as follows:</p>
+<pre><code>Provides:         IID_IExecutable
+Matches:
+    Interface:    IID_IFile
+    File access:  IID_ExcutableFile
+    Signature:
+        0: &lt;CF&gt; &lt;FA&gt; &lt;ED&gt; &lt;FE&gt;
+        1: &lt;CE&gt; &lt;FA&gt; &lt;ED&gt; &lt;FE&gt;
+        2: &lt;CA&gt; &lt;FE&gt; &lt;BA&gt; &lt;BE&gt;
+</code></pre>
+<p>When <code>queryInterface()</code> is invoked on an object advertising <code>IFile</code>, and the interface requested is <code>IExecutable</code>, and one of the three provided binary signatures match, then the ELF interpreter's factory’s <code>interpreterInstance()</code> method is invoked:</p>
+<pre><code>int interpreterInstance([in] const uuid_t inneriid, [in,iid_is(inneriid)] void *innerobject, [in] const uuid_t interpiid, [out,iid_is(interpiiid)] void **interpreter);
+</code></pre>
+<p>In this case, it would be invoked with:</p>
+<pre><code>factory-&gt;interpreterInstance(IID_IFile, fileobject, IID_IExecutable, &amp;ptr);
+</code></pre>
+<p>From the perspective of the user of the object descriptor, this is completely transparent: all executable Mach-O files appear to natively support the IExecutable interface, allowing them to be executed in a task.</p>
+<h3 id="built-in-device-drivers">Built-in device drivers</h3>
+<h4 id="character-devices">Character devices</h4>
+<h5 id="maintenance-console">Maintenance console</h5>
+<p>If enabled, Odin has the capability to use a serial a serial console for log output, defaulting to 9600,8,N,1.</p>
+<p>If Odin is running in user-space on a host operating system, a “host console” which sends output to standard error is provided instead.</p>
+<h4 id="filesystems">Filesystems</h4>
+<h5 id="archive-filesystem">Archive filesystem</h5>
+<h4 id="interpreters-1">Interpreters</h4>
+<h5 id="elf-interpreter">ELF interpreter</h5>
+<p>The ELF interpreter provides a loader capable of presenting an <code>IExecutable</code> interface to any ELF executable for a supported architecture and ABI that is accessible as a executable <code>IFile</code>.</p>
+<p>Unlike other interpreter classes, the ELF interpreter is compiled in to Odin on most systems, and so the initial set of tasks which are launched at system start-up (prior to interpreters for any other executable formats being launched) must also be ELF binaries.</p>
+<h2 id="building-from-source">Building from source</h2>
+<h2 id="running-odin">Running Odin</h2>
+<h3 id="deployment-scenarios">Deployment scenarios</h3>
+<p>For desktops and servers, the envisaged deployment scenario is as a dom0 kernel beneath a hypervisor, allowing personalities to launch VMs to provide whatever high-level capabilities (running Linux or Windows applications, for example) might be required.</p>
+<p>On more constrained systems, a hypervisor may not be feasible, and instead Odin runs on bare-metal. On systems without an MMU, a different memory manager could be employed—or even left to the rudimentary management Odin itself performs.</p>
+<p>Odin is intended to be small, portable and extensible enough to be able to form a useful basis for operating systems running on everything from IoT devices to midrange and mainframe systems.</p>
+</section>
+</main>
+</body>
+</html>

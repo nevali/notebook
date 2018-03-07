@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en-GB"  dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Acropolis • Mo McRoberts | Music • Broadcasting • Technology</title>
+  <link rel="stylesheet" href="https://neva.li/common/styles.css">
+</head>
+<body>
+<header>
+<h1 class="title">Mo McRoberts</h1>
+<h2 class="subtitle">Music • Broadcasting • Technology</h2>
+</header>
+<main>
+<section class="wiki">
+<h1>Acropolis</h1>
+<h1 id="acropolis">Acropolis</h1>
+<ul>
+<li><a href="https://github.com/bbcarchdev/acropolis" class="uri">https://github.com/bbcarchdev/acropolis</a></li>
+</ul>
+<h1 id="introduction">Introduction</h1>
+<p>Acropolis is a toolkit for building and maintaining knowledge graphs. The Acropolis stack powers the BBC's Research &amp; Education Space and Datalab projects.</p>
+<h2 id="research--education-space">Research &amp; Education Space</h2>
+<ul>
+<li><a href="https://bbcarchdev.github.io/res/" class="uri">https://bbcarchdev.github.io/res/</a></li>
+<li><a href="https://acropolis.org.uk/" class="uri">https://acropolis.org.uk/</a></li>
+</ul>
+<p>RES's purpose is to construct a knowledgebase of Linked Open Data, a reasonable amount of which (thanks in part to our intervention) ought to concern or relate to creative works with associated accessible (subject to licensing/access controls) media assets which may be presented in a variety of ways, and in doing so always represent the origins of the data and ensure where possible that applications can retrieve it, both because RES won't always retain the finer (domain-specific) detail, and because RES doesn't claim to be authoritative.</p>
+<h2 id="datalab">Datalab</h2>
+<ul>
+<li><a href="https://twitter.com/bbcdatalab" class="uri">https://twitter.com/bbcdatalab</a></li>
+<li><a href="https://github.com/bbc/datalab-recruitment" class="uri">https://github.com/bbc/datalab-recruitment</a></li>
+</ul>
+<h1 id="components">Components</h1>
+<h2 id="m4"><a href="https://github.com/bbcarchdev/m4">m4</a></h2>
+<p>Build system support macros</p>
+<h2 id="liburi"><a href="https://github.com/bbcarchdev/liburi">liburi</a></h2>
+<p>URI parsing and manipulation library</p>
+<h2 id="libawsclient"><a href="https://github.com/bbcarchdev/libawsclient">libawsclient</a></h2>
+<p>Client access library for services speaking AWS protocols</p>
+<h2 id="libsparqlclient"><a href="https://github.com/bbcarchdev/libsparqlclient">libsparqlclient</a></h2>
+<p>Client access library for SPARQL-savvy graph stores</p>
+<h2 id="libsql"><a href="https://github.com/bbcarchdev/libsql">libsql</a></h2>
+<p>Client access library for SQL databases</p>
+<h2 id="libcluster"><a href="https://github.com/bbcarchdev/libcluster">libcluster</a></h2>
+<p>Self-balancing cluster library</p>
+<ul>
+<li>Add support for <a href="https://github.com/i-scream/libstatgrab" class="uri">https://github.com/i-scream/libstatgrab</a>?</li>
+</ul>
+<h2 id="libsupport"><a href="https://github.com/bbcarchdev/libsupport">libsupport</a></h2>
+<p>Should be renamed to <code>libappconfig</code> and have logging elements removed (replaced with <a href="https://github.com/rsyslog/liblogging"><code>liblogging</code></a>)</p>
+<h2 id="anansi"><a href="https://github.com/bbcarchdev/anansi">Anansi</a></h2>
+<p>Web crawler</p>
+<h2 id="twine"><a href="https://github.com/bbcarchdev/twine">Twine</a></h2>
+<p>RDF-oriented workflow processing server</p>
+<h2 id="quilt"><a href="https://github.com/bbcarchdev/quilt">Quilt</a></h2>
+<p>Linked Data server</p>
+<ul>
+<li>Support <code>GET</code> requests including a structured request payload? (JSON?)
+<ul>
+<li>Can this be implemented without breaking caching? Is there a <code>Vary: body</code>?</li>
+<li>More trouble than it's worth?</li>
+<li>Should be a <code>POST</code>? But then breaks semantics?</li>
+</ul></li>
+<li>Other HTTP methods should be at least <em>handled</em>; it should then be up to the engine to decide what to do.
+<ul>
+<li>e.g., <a href="#patchwork">Patchwork</a> could accept S/MIME-signed <code>PUT</code> requests to enqueue graphs for processing?</li>
+</ul></li>
+<li>Configurable routing (e.g., send different URI patterns to different engines)
+<ul>
+<li>Incoming URI and query-parameter transformation</li>
+<li>It should be straightforward to implement this with neglible loss of efficiency</li>
+</ul></li>
+</ul>
+<h2 id="spindle"><a href="https://github.com/bbcarchdev/spindle">Spindle</a></h2>
+<p>Knowledge-base processing engine for <a href="#twine">Twine</a></p>
+<h2 id="patchwork"><a href="https://github.com/bbcarchdev/patchwork">Patchwork</a></h2>
+<p>Knowledge-base server engine for <a href="#quilt">Quilt</a></p>
+<ul>
+<li>Add support for multiple <code>?uri=URI</code> query-parameters, return a single RDF doc containing all of the requested entities.
+<ul>
+<li>Add a configurable soft-limit for the number of URIs which will be processed in a single query</li>
+</ul></li>
+</ul>
+</section>
+</main>
+</body>
+</html>

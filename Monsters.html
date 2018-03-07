@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en-GB"  dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Monsters • Mo McRoberts | Music • Broadcasting • Technology</title>
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="https://neva.li/common/styles.css">
+</head>
+<body>
+<header>
+<h1 class="title">Mo McRoberts</h1>
+<h2 class="subtitle">Music • Broadcasting • Technology</h2>
+</header>
+<main>
+<section class="wiki">
+<h1>Monsters</h1>
+<h1 id="monsters">Monsters!</h1>
+<p><a href="https://github.com/twistedflick/monsters" class="uri">https://github.com/twistedflick/monsters</a></p>
+<p><em>Monsters!</em> is based upon a simplified form of genetics. Loosely.</p>
+<p>A Monster is represented by its genetic code, along with some data which reflects its progress through life.</p>
+<h2 id="lifecycle-of-a-monster">Lifecycle of a Monster</h2>
+<p>All Monsters are hatched from eggs. Nobody knows why.</p>
+<p>Some Monsters will just lay eggs by themselves. Others need to mate with other monsters.</p>
+<p>Monsters have a gender of some sort, but it's not very clear what it's for.</p>
+<p>There are different <a href="#species">species</a> of Monster, but they’re all just Monsters. The different species have different characteristics, though.</p>
+<p>Monsters live forever, but after they’ve grown to full size they don’t need much care and attention, they’ll happily just exist.</p>
+<h2 id="the-monsters-genetic-code">The <em>Monsters!</em> genetic code</h2>
+<h3 id="base-pairs">Base-pairs</h3>
+<p>We treat a <em>base pair</em> as a genetic integer digit with a range of 0…15, of which four values are defined:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co">/* Base pairs: the DNA alphabet */</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">typedef</span> <span class="kw">enum</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">{</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">    <span class="co">/* (A)denine (paired with Thymine) */</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">    MON_DEFBP_(ADENINE, A, <span class="bn">0x0</span>),</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">    </a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">    <span class="co">/* (C)ytosine (paired with Guanine) */</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">    MON_DEFBP_(CYTOSINE, C, <span class="bn">0x1</span>),</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">    </a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">    <span class="co">/* (G)uanine (paired with Cytosine) */</span></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">    MON_DEFBP_(GUIANINE, G, <span class="bn">0xe</span>),</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">        </a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">    <span class="co">/* (T)hymine (paired with Adenine) */</span></a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">    MON_DEFBP_(THYMINE, T, <span class="bn">0x0f</span>)</a>
+<a class="sourceLine" id="cb1-15" data-line-number="15">} MON_BASEPAIR;</a></code></pre></div>
+<p>As only four base-pairs are known, but there’s room for up to 15, it’s possible that more may be discovered in the future!</p>
+<p>They are called base <em>pairs</em> because in real-life genetics, DNA is a spiral-shaped ladder, where one side complements the other, with the rungs joining them together to form a series of pairs.</p>
+<p>Adenine, <code>A</code>, is the complement of Thymine, <code>T</code>; while Cytosine, <code>C</code>, and Guanine, <code>G</code>, complement each other.</p>
+<p>For example, if a sequence was <code>AAG CAT</code> on one side, it would be matched up with <code>TTC GTA</code> on the other—and vice versa. This aspect of base-pairs is fundamental to the process of <a href="https://en.wikipedia.org/wiki/Transcription_(biology)">transcription</a> works in biology.</p>
+<p>But because we know what one side of a base-pair will look like given the other, we don’t need to <em>state</em> that there’s a Adenine-Thymine pair: knowing that Adenine is on one side implies there'll always be Thymine on the other, so we can just refer to that pair as being <code>A</code>.</p>
+<p>In real DNA, one side is called the <a href="https://en.wikipedia.org/wiki/Sense_strand">sense strand</a> while the other side is the anti-sense strand. In <em>Monsters!</em>, we don’t really need to worry about the anti-sense strand at all.</p>
+<p>When <em>encoding</em> base-pairs to store in a binary file, each base is encoded as a <em>4-bit</em> integer—so one 8-bit byte encodes two base-pairs.</p>
+<p>When representing base-pairs in text form, the letters <code>A</code>, <code>C</code>, <code>G</code> and <code>T</code> are generally used. These are often grouped into threes representing <a href="#codons-and-genes">codons</a>.</p>
+<h3 id="codons-and-genes">Codons and genes</h3>
+<p>A codon is a triplet of bases, for example <code>AAA</code> or <code>CGT</code>. Inside a Monster, each codon is represented as a 12-bit integer, with each base taking up four bits, and so is most easily written as hex digits:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">/* Codons: triplets of base-pairs that form amino acids */</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">typedef</span> <span class="kw">enum</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">{</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">    <span class="co">/* GCT =&gt; Ala/A/Alinine */</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">    MON_DEFCODON_(ALANINE, ALA, A, G, C, T),</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">    </a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">    <span class="co">/* CGT =&gt; Arg/R/Arganine */</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">    MON_DEFCODON_(ARGANINE, ARG,R, C, G, T),</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">    </a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">    <span class="co">/* AAT =&gt; Asn/N/Asparagine */</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">    MON_DEFCODON_(ASPARAGINE, ASN, N, A, A, T),</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">    </a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">    <span class="co">/* GAT =&gt; Asp/D/Aspartic acid (aspartate) */</span></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">    MON_DEFCODON_(ASPARTATE, ASP, D, G, A, T),</a>
+<a class="sourceLine" id="cb2-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">    <span class="co">/* … */</span></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17">    </a>
+<a class="sourceLine" id="cb2-18" data-line-number="18">    <span class="co">/* Start codon: Metionine begins a gene sequence */</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19">    MON_CODON_START = MON_CODON_METIONINE,</a>
+<a class="sourceLine" id="cb2-20" data-line-number="20">        </a>
+<a class="sourceLine" id="cb2-21" data-line-number="21">    <span class="co">/* Stop codons */</span></a>
+<a class="sourceLine" id="cb2-22" data-line-number="22">    MON_CODON_STOP_OCHRE = MON_MKCODON(T, A, A),</a>
+<a class="sourceLine" id="cb2-23" data-line-number="23">    MON_CODON_STOP_AMBER = MON_MKCODON(T, A, G),</a>
+<a class="sourceLine" id="cb2-24" data-line-number="24">    MON_CODON_STOP_OPAL = MON_MKCODON(T, G, A)</a>
+<a class="sourceLine" id="cb2-25" data-line-number="25">    </a>
+<a class="sourceLine" id="cb2-26" data-line-number="26">} MON_CODON;</a></code></pre></div>
+<p>Each codon is not simply a piece of data, but part of an <em>instruction</em> which is interpreted by the <a href="#synthesizer">synthesizer</a> when bringing a Monster to life.</p>
+<p>A sequence of these instructions either makes up a <em>gene</em>, or is <em>junk</em>. The &quot;start codon&quot; ( <code>ATG</code>, or <code>MON_CODON_START</code>) marks the beginning of a gene, and &quot;stop codons&quot; end it. Any codons outside of the gene are ignored by the synthesizer, and considered junk.</p>
+<p>In real genetics, the codons make up amino acids; combinations of amino acids create peptides, sequences of which are arranged into proteins. Proteins are large (and three-dimensional) molecules whose physical shape defines their function, and whose shape is governed by chemical bonding.</p>
+<p>Because protein folding (simulating the creation of proteins from amino acids and determining what shape it can be) is a huge area of research and computationally very difficult, that's not how <em>Monsters!</em> works.</p>
+<p>Instead, a Monster's genes can be thought of as a kind of <em>function</em> which is executed by the synthesizer in order to <em>do</em> something. Sometimes that “something” can control how the synthesizer processes the genetic sequences, but usually it's to set the <a href="#properties">properties</a> of a Monster.</p>
+<h3 id="chromosomes">Chromosomes</h3>
+<p>Chromosomes are self-contained groups of genes and junk DNA. There is no set limit on the number of chromosomes a Monster can have, and it varies from species to species.</p>
+<h3 id="fingerprint">Fingerprint</h3>
+<p>A Monster’s fingerprint is derived from a hash of its encoded DNA.</p>
+<p>It is defined as:</p>
+<pre><code>fingerprint = SHA256(SHA256(chromosome₀) + SHA256(chromosome₁) + … + SHA256(chromosomeₓ))
+</code></pre>
+<h3 id="properties">Properties</h3>
+<p>Properties are values that can be set or manipulated by a Monster’s genes during <a href="#synthesizer">synthesis</a>.</p>
+<p>Each property is an integer, whose value is by default zero.</p>
+<p>Properties are identified by two integers: a <em>scope</em>, and an <em>index</em>. The scope specifies whether this property is specific to the gene, the chromosome, or the Monster as a whole, while the index is just a number associated with each property.</p>
+<p>A set of properties within a scope is essentially an array of integers of arbitrary length.</p>
+<p>For example, a gene might include an instruction to &quot;replace the 26th property of the current chromosome with the value <code>0x00f</code>&quot;.</p>
+<h3 id="traits">Traits</h3>
+<p><em>Traits</em> are what turns <a href="#properties">properties</a> into a Monster’s physical characteristics and behaviours.</p>
+<p>Traits can be thought of as <em>meta-properties</em>: they derive their values from several properties at once.</p>
+<p>For example, a Monster might have a trait which defines how many eyes it has, but the value may be derived from a combination of different properties from different scopes.</p>
+<p>Multiple traits may be influenced by some of the same properties (and so some of the same genes). A gene which contributes to the trait which defining the number of eyes a Monster has might also contribute to the trait defining the colour of skin (or scales) it has.</p>
+<h3 id="species">Species</h3>
+<p>A set of traits together make up a <em>species</em>. Some species are simple and harmless, others might be a bit more volatile.</p>
+<h3 id="pedigree">Pedigree</h3>
+<p>The combination of a Monster’s DNA and its species are used to define its <em>pedigree</em>. The pedigree is a kind of digital certificate which marks the hatching of a Monster and confirms its birthday, DNA, and species.</p>
+<p>Pedigree certificates are signed by a <em>registry</em>, which keeps track of which monsters exist and how they progress.</p>
+<p>Anyone can create a monster, and anyone can sign a pedigree certificate, but training depends upon sparring partners being of the same species as one another and both Monster owners trusting the pedigree certificate (and so by extension the registry) of the other.</p>
+<p>Monsters can still have friendly sparring matches without trusting each other’s pedigree certificates (or even being the same species), but they won’t grow as a result.</p>
+<h2 id="synthesizer">Synthesizer</h2>
+<p>The synthesizer takes a Monster’s genetic sequence and interprets it, resulting in sets of properties which can be mapped to the Monster’s species’ traits.</p>
+<p>The <em>Monsters!</em> synthesizer is a type of virtual machine, inspired in part by <a href="https://en.wikipedia.org/wiki/Forth_(programming_language)">Forth</a>.</p>
+<p>A chromosome is processed in order from start to finish, but at the start of each the synthesizer is in a <em>passive</em> state, which means that it simply reads the <a href="#codons-and-genes">codons</a> and moves on to the next.</p>
+<p>This continues until a <em>start codon</em> (Metionine, <code>ATG</code>) is encountered, at which point it becomes <em>active</em> and starts treating codons as being part of a <em>gene</em> and so executable. It remains in the active state until a <em>stop codon</em> is encountered.</p>
+<h2 id="genetic-engineering">Genetic engineering</h2>
+<p>It ought to be possible to write genes by hand. Possible, but not easy. Good luck.</p>
+</section>
+</main>
+</body>
+</html>

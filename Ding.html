@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en-GB"  dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Ding • Mo McRoberts | Music • Broadcasting • Technology</title>
+  <link rel="stylesheet" href="https://neva.li/common/styles.css">
+</head>
+<body>
+<header>
+<h1 class="title">Mo McRoberts</h1>
+<h2 class="subtitle">Music • Broadcasting • Technology</h2>
+</header>
+<main>
+<section class="wiki">
+<h1>Ding</h1>
+<h1 id="ding">Ding!</h1>
+<ol>
+<li>Simple scene loader</li>
+</ol>
+<ul>
+<li><input type="checkbox" checked disabled> XML-based scene format, specifies primitive (including lights) locations and scales only</li>
+<li><input type="checkbox" checked disabled> Just parses and outputs</li>
+<li><input type="checkbox" checked disabled> Autotools</li>
+<li><input type="checkbox" checked disabled> Travis CI</li>
+<li><input type="checkbox" checked disabled> Add XML namespace</li>
+<li><input type="checkbox" disabled> l10n with expanded error messages containing explanations (simplified fallbacks in code)</li>
+</ul>
+<ol start="2">
+<li><del>Composite (group) objects</del></li>
+<li><del>Primitive transforms &amp; translation</del></li>
+<li>Group transforms &amp; translations</li>
+<li>Includes/reuse of composite obects (via <code>xlink:href</code> and <code>xml:id</code>)</li>
+</ol>
+<ul>
+<li><input type="checkbox" checked disabled> Reference-counted scene objects</li>
+<li><input type="checkbox" disabled> Unresolved object dereferencing pass</li>
+<li><input type="checkbox" disabled> Copy constructors/duplicators</li>
+</ul>
+<ol start="6">
+<li>SDL-based scene viewer</li>
+</ol>
+<ul>
+<li>Fixed camera &amp; viewport/FOV scale</li>
+<li>Cross-platform skeleton (generate Xcode and VS projects)</li>
+</ul>
+<ol start="7">
+<li>Simple colour shading of primitives</li>
+<li>Shaded/wireframe toggle</li>
+<li>Keyboard/mouse camera movement</li>
+<li>Model loading</li>
+</ol>
+<ul>
+<li><a href="http://assimp.sourceforge.net">Assimp</a>?</li>
+</ul>
+<ol start="11">
+<li>Texture loading</li>
+<li>Add a skybox/skydome</li>
+<li>Configurable cameras (first- vs third-person vs overhead, for example) and a camera cycle key</li>
+</ol>
+<ul>
+<li>Cameras can be fixed or <em>track</em> - a tracking camera is transformed or translated whenever an object which is tracking it does based upon scene-defined adjustments</li>
+</ul>
+<ol start="14">
+<li>Scene inheritance: load all of the objects from a base scene, then extend it with additional objects</li>
+<li>Physics and collisions</li>
+</ol>
+<ul>
+<li><a href="https://github.com/bulletphysics/bullet3">Bullet</a></li>
+<li>Wrap the camera in a physics capsule so the 'player' can collide</li>
+</ul>
+<ol start="16">
+<li>Animated models</li>
+<li>Optional raycasting mode</li>
+</ol>
+<ul>
+<li>May operate independently of camera if there are sufficient input sources (e.g., if a gyroscope and touchscreen are available, the gyro could be used to alter camera, and a touch to trigger raycasting)</li>
+</ul>
+<ol start="19">
+<li>Trigger a visual effect when collisions or raycast occur</li>
+<li>Audio (play a sound when a collision occurs)</li>
+<li>Add a &quot;goal&quot; objects which can be collided-with to end the scene</li>
+<li>Add an optional countdown timer</li>
+<li>Add optional score-keeping</li>
+<li>Move object behaviours (keep score, play sound, add visual effect, etc.) into Lua</li>
+<li>Ability to load assets, including scene XML, Lua and textures from packages (ZIP files)</li>
+<li>Fork into Ding! from Scene Viewer</li>
+</ol>
+<ul>
+<li>Remove hotkeys for shaded/wireframe, camera flythrough, etc.</li>
+</ul>
+<ol start="26">
+<li>Add global states</li>
+<li>Add progression (a goal or timer expiry leads to another scene)</li>
+<li>Add scene music</li>
+<li>Add high-scores</li>
+<li>Split into Arcade (timed) and Peaceful (untimed, but objects may only be collided with a certain number of times) modes</li>
+<li>Add health to Arcade mode and health-influencing (damaging and enhancing) objects</li>
+<li>Add damaging NPC objects which pathfind and have their <em>own</em> health</li>
+</ol>
+</section>
+</main>
+</body>
+</html>
