@@ -4,10 +4,18 @@ OUTPUT_BRANCH = gh-pages
 SOURCE = src
 SOURCE_REPO = git://github.com/nevali/notebook.wiki.git
 SOURCE_BRANCH = master
+INCLUDES = includes
 STATIC = static
-EXCLUDE = _%.md
-SOURCEFILES = $(filter-out $(EXCLUDE),$(patsubst $(SOURCE)/%,%,$(wildcard $(SOURCE)/*.md)))
-OUTPUTFILES = $(patsubst %.md,$(OUTPUT)/%.html,$(SOURCEFILES))
+IGNORE_PATTERN = Home.md
+INCLUDES_PATTERN = _%.md
+
+SOURCEFILES = $(filter-out $(IGNORE_PATTERN) $(INCLUDES_PATTERN),$(patsubst $(SOURCE)/%,%,$(wildcard $(SOURCE)/*.md)))
+INCSRCFILES = $(filter $(INCLUDES_PATTERN),$(patsubst $(SOURCE)/%,%,$(wildcard $(SOURCE)/*.md)))
+OUTPUTFILES = $(OUTPUT)/index.html $(patsubst %.md,$(OUTPUT)/%.html,$(SOURCEFILES))
+INCFILES = $(patsubst $(INCLUDES_PATTERN),$(INCLUDES)/%.html,$(INCSRCFILES))
+
+export index_PANDOCOPTS = -Mpagetitle:Notebook -A $(INCLUDES)/Sidebar.html
+
 PANDOC ?= pandoc
 PANDOCOPTS = -s \
 	--data-dir=. \
@@ -18,7 +26,7 @@ PANDOCOPTS = -s \
 
 LOGPREFIX = $(MAKE)[$(MAKELEVEL)]
 
-all: preflight $(OUTPUTFILES)
+all: preflight $(INCFILES) $(OUTPUTFILES)
 
 cleanbuild:
 	@$(MAKE) clean
@@ -38,7 +46,7 @@ autobuild:
 			git commit -a -m"Autobuild commit." || exit $? ; \
 			git push $(OUTPUT_REPO) gh-pages || exit $? ; \
 		else \
-			echo "$(LOGPREFIX):  No changes to push" >&2 ; \
+			echo "$(LOGPREFIX): No changes to push" >&2 ; \
 		fi
 
 clean:
@@ -50,17 +58,44 @@ clean:
 			 *) test -d $$i || rm -f $$i ;; \
 		esac ; \
 	done
+	@echo "$(LOGPREFIX): Cleaning $(INCLUDES)..." >&2
+	@rm -f $(INCFILES)
 
 preflight:
-	@echo "$(LOGPREFIX):  Merging $(STATIC) into $(OUTPUT)..." >&2
+	@echo "$(LOGPREFIX): Merging $(STATIC) into $(OUTPUT)..." >&2
 	@( cd $(STATIC) && tar cf - . ) | ( cd $(OUTPUT) && tar xf - )
 
-$(OUTPUT)/%.html: $(SOURCE)/%.md templates/default.html5
-	@echo "$(LOGPREFIX):  Generating $@ from $<" >&2
-	@$(PANDOC) $(PANDOCOPTS) -f gfm -t html5 -s -Mpagetitle:"$*" $< | \
+$(INCLUDES)/%.html: $(SOURCE)/_%.md templates/snippet.html5
+	@echo "$(LOGPREFIX): Generating snippet $@ from $<" >&2
+	@mkdir -p $(INCLUDES)
+	@$(PANDOC) $(PANDOCOPTS) -f gfm -t html5 --template=snippet \
+		$${$*_PANDOCOPTS} \
+		$< | \
+		sed -e 's!\[x\]!<input type="checkbox" checked disabled>!g' \
+			 -e 's!\[ \]!<input type="checkbox" disabled>!g' \
+		> $@
+
+$(OUTPUT)/%.html: $(SOURCE)/%.md templates/wiki.html5 $(INCFILES)
+	@echo "$(LOGPREFIX): Generating $@ from $<" >&2
+	@default_PANDOCOPTS="-Mpagetitle:$*" ; \
+		$(subst .,_,$*)_PANDOCOPTS=$${$(subst .,_,$*)_PANDOCOPTS:-$$default_PANDOCOPTS} ; \
+		$(PANDOC) $(PANDOCOPTS) -f gfm -t html5 -s --template=wiki \
+		$${$(subst .,_,$*)_PANDOCOPTS} \
+		$< | \
+		sed -e 's!\[x\]!<input type="checkbox" checked disabled>!g' \
+			 -e 's!\[ \]!<input type="checkbox" disabled>!g' \
+		> $@
+
+$(OUTPUT)/%.html: $(STATIC)/%.md templates/default.html5 $(INCFILES)
+	@echo "$(LOGPREFIX): Generating $@ from $<" >&2
+	@default_PANDOCOPTS="-Mpagetitle:$*" ; \
+		$*_PANDOCOPTS=$${$*_PANDOCOPTS:-$$default_PANDOCOPTS} ; \
+		$(PANDOC) $(PANDOCOPTS) -f gfm -t html5 -s --template=default \
+		$${$*_PANDOCOPTS} \
+		$< | \
 		sed -e 's!\[x\]!<input type="checkbox" checked disabled>!g' \
 			 -e 's!\[ \]!<input type="checkbox" disabled>!g' \
 		> $@
 
 .PHONY: all clean preflight
-.NOEXPORT:
+.EXPORTALL:
