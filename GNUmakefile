@@ -78,9 +78,9 @@ $(INCLUDES)/%.html: $(SOURCE)/_%.md templates/snippet.html5
 $(OUTPUT)/%.html: $(SOURCE)/%.md templates/wiki.html5 $(INCFILES)
 	@echo "$(LOGPREFIX): Generating $@ from $<" >&2
 	@default_PANDOCOPTS="-Mpagetitle:$*" ; \
-		$(subst .,_,$*)_PANDOCOPTS=$${$(subst .,_,$*)_PANDOCOPTS:-$$default_PANDOCOPTS} ; \
+		$(subst .,_,$(subst -,_,$*))_PANDOCOPTS=$${$(subst .,_,$(subst -,_,$*))_PANDOCOPTS:-$$default_PANDOCOPTS} ; \
 		$(PANDOC) $(PANDOCOPTS) -f gfm -t html5 -s --template=wiki \
-		$${$(subst .,_,$*)_PANDOCOPTS} \
+		$${$(subst .,_,$(subst -,_,$*))_PANDOCOPTS} \
 		$< | \
 		sed -e 's!\[x\]!<input type="checkbox" checked disabled>!g' \
 			 -e 's!\[ \]!<input type="checkbox" disabled>!g' \
