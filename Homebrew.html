@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en-GB"  dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Homebrew • Mo McRoberts | Music • Broadcasting • Technology</title>
+  <link rel="stylesheet" href="https://neva.li/common/styles.css">
+</head>
+<body>
+<header>
+<h1 class="title">Mo McRoberts</h1>
+<h2 class="subtitle">Music • Broadcasting • Technology</h2>
+</header>
+<main>
+<section class="wiki">
+<h1>Homebrew</h1>
+<p><a href="https://brew.sh">Homebrew</a> is a <a href="https://www.freebsd.org/ports/">Ports-like</a> packaging system for macOS.</p>
+<h2 id="things-i-like-about-homebrew">Things I like about Homebrew</h2>
+<p>(All of these are critical criteria for third-party package management)</p>
+<ul>
+<li>Self-contained (nothing is installed outside of its installation prefix)</li>
+<li>Use of pre-built binaries when possible (mitigates the classic Ports-family issue of waiting forever to install something)</li>
+<li>Well-maintained recipes</li>
+<li>Attempts to not conflict with system-provided binaries</li>
+<li>Does <em>not</em> attempt to manage/replace my entire system/build environment</li>
+</ul>
+<h2 id="things-i-dont-like-about-homebrew">Things I don't like about Homebrew</h2>
+<ul>
+<li>Installation instructions promote a <code>curl | sh</code> anti-pattern (what's wrong with a native macOS <code>.pkg</code>?)</li>
+<li>The default is to install to <code>/usr/local</code>, which should be reserved for user-built binaries ('managed' builds should live in <code>/opt</code>)</li>
+<li>It has a preference for granting unprivileged users wide-scale privileges (i.e., whomever runs <code>brew</code> needs permission to write to the installation prefix directly)</li>
+<li>Ridiculous terminology</li>
+</ul>
+<h2 id="how-i-use-homebrew">How I use Homebrew</h2>
+<ul>
+<li>I keep Homebrew in <code>/opt/brew</code>; <code>/opt/brew/bin</code> is in my <code>$PATH</code>.</li>
+<li><code>/opt/brew</code> is owned by a <code>_homebrew</code> user, which is a non-privileged system account (its home directory is <code>/var/lib/homebrew</code>, and ensures a <code>~/Library</code> tree can be written-to independently of the installation prefix or ultimately-invoking user)</li>
+<li>I have a <code>sudoers</code> file which allows execution of <code>/opt/brew/bin/brew</code> as <code>_homebrew</code> by certain users (i.e., <code>sudo -u _homebrew -H /opt/brew/bin/brew ...</code></li>
+<li>I have a wrapper script, <code>/usr/local/bin/brew</code>, which appears in my <code>$PATH</code> before <code>/opt/brew/bin</code>, and which simply executes the <code>sudo</code> command above, passing it any supplied command-line arguments</li>
+</ul>
+<p>Currently, this is managed via <a href="https://puppet.com">Puppet</a> on my Macs, but it really should be possible to generate a signed Homebrew <code>.pkg</code> which does all of this from the Homebrew <a href="https://github.com/Homebrew/brew/">Github repository</a> via <a href="https://travis-ci.org">Travis</a></p>
+<h2 id="caveats">Caveats</h2>
+<p>Installing somewhere than <code>/usr/local</code> is not recommended by Homebrew. My use-cases mean I've yet to run into any issues.</p>
+<p>I will tend to install upstream native packages in preference to Homebrew builds where available (e.g., Puppet, <code>pandoc</code>, Node, Python, etc.)</p>
+</section>
+</main>
+</body>
+</html>
