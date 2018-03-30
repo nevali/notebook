@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-GB"  dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Keyring • Mo McRoberts | Music • Broadcasting • Technology</title>
+  <link rel="stylesheet" href="https://neva.li/common/styles.css">
+</head>
+<body>
+<header>
+<h1 class="title">Mo McRoberts</h1>
+<h2 class="subtitle">Music • Broadcasting • Technology</h2>
+</header>
+<main>
+<section class="wiki">
+<h1>Keyring</h1>
+<p>A <a href="https://tools.ietf.org/html/rfc7468#section-1">PEM-style</a> format containing a set of public &amp; private keys and certificates all related to a single conceptual identity. e.g., it might hold a single SSH public key for a person; at the other end of the scale, it might hold a person's current and legacy public and private keys, along with both self-signed and issued certificates, all which identify that single individual.</p>
+<p>A single level of key delegation is permitted - that is, one key is defined as the &quot;root&quot; (primary) identity, and is used to sign any other key which is added to the keyring and deemed to represent the holder of the root. e.g., an RSA key might be deemed the root, but is used to sign an ECDSA key which is included and then considered to be equivalent when the user needs to identify themselves.</p>
+<p>Between the PEM-style header and trailer, a keyring consists of a set of header fields, a blank line, and then any number of components. Each component begins with a line consisting just of two dashes, followed by per-component headers, a blank line, one or more lines of base64-encoded data, and terminating blank line. Every component must include a <code>Format</code> header which indicates the format of the encoded data; this allows a consuming application to distinguish between different types of keys and certificates without needing to actually decode and parse that data (it also allows for, e.g., non-DER-encoded keys and certificates, making the format more widely useful than just X.509-family variants)</p>
+<p>Headers are for informational purposes only: they may be modified at any time (similar in spirit to the comment field of an SSH pubkey); the only <em>critical</em> headers (e.g., <code>Key-Fingerprint-*</code>) can be cryptographically verified.</p>
+<p>When using a keyring as a container for one's <em>own</em> keys (and so includes private keys), the headers can therefore be used as configuration hints: for example, a private key might specify in its headers the hosts which it should be used in preference for. When a keyring contains only <em>public</em> keys, the non-critical headers can be ignored save for an aid to diagnosis.</p>
+<pre><code>-----BEGIN KEYRING-----
+Name: Mo McRoberts
+URI: https://neva.li/#id
+Keyring-URL: https://neva.li/me/keyring
+Generator: keyring-0.0.1
+Key-Fingerprint-SHA256: KS59FikNG+8rVSWda3eOJWgnTO9vinOxBI6Tu7apBpI
+
+--
+Format: rsa-pkcs1
+Key-Type: RSA
+Key-Size: 2048
+
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA9wgMagGNFIGjhEtOxoTf
++Z3d/Vgn48jNJ8dlemsQxM9hFgNwKF/LCZ8Bt32HkttvmUln7G6emQfl5f0Lopdn
+8/zJGpoIbEnzgntVw7ZRxs4lrqQNUcLLN76SBM5NZkUs7WMJSsu6jOGXkgLBOmap
+RtzCthKDxCK3Z3j7kYDUTQjx3QFaHMDypPflNV6WIzqqiLtHrb1TCdROrCg3PEie
+PrpmUEnOovHevu8C3ad4SLe2mGhggx1z+CUfoSA9aU6lgN+ADIXKMd/CA6RXciok
+e70HJmbmhth7+bI8fVkBRWpAPz4LWanuOlVH7MvTMgi4YNvvsnWxn30XO5xWoxrV
+qwIDAQAB
+
+--
+Format: ecdsa-blah
+Preferred-For: *.example.com
+Key-Fingerprint-SHA256: ...
+Key-Type: ECDSA
+
+aaaabbbbccc...
+
+--
+Format: x509
+Subject:
+Issuer:
+Serial:
+
+aaaabbbbccc...
+
+--
+Format: openpgp
+aaaabbbbccc...
+
+--
+Format: crl
+URL: https://neva.li/me/crl
+
+aaaabbbbccc...
+
+-----END KEYRING-----
+</code></pre>
+<ol>
+<li>each bundle has a root identity, specified as one or more <code>Key-Fingerprint-xxx</code> headers. validity: all of the fingerprints must relate to the same key; at least one supported hash algorithm must be used (currently <code>SHA256</code>, <code>SHA384</code>, <code>SHA512</code>)</li>
+<li>plain public or private key material (form?); validity: key fingerprints must match root <code>Key-Fingerprint-xxx</code> <em>or</em> be the subject of a key delegation</li>
+<li>key delegation: pubkey + signature (generated from root identity)</li>
+<li>a certificate</li>
+<li>a CRL (and a URL for updating it)</li>
+</ol>
+</section>
+</main>
+</body>
+</html>
