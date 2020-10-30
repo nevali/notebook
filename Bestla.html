@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en-GB"  dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Bestla • Mo McRoberts | Music • Broadcasting • Technology</title>
+  <link rel="stylesheet" href="https://neva.li/common/styles.css">
+</head>
+<body>
+<header>
+<h1 class="title">Mo McRoberts</h1>
+<h2 class="subtitle">Music • Broadcasting • Technology</h2>
+</header>
+<main>
+<section class="wiki">
+<h1>Bestla</h1>
+<p>bootloader/test harness</p>
+<p>speaks multiboot2</p>
+<p>on mach, spawns a task, loads executables into it, generally acts as a bootloader would but using mach facilities to govern a child task instead of direct access to physical RAM to govern a (virtual) machine</p>
+<p>let's introduce <em>bootscripts</em>, which list the executables (and their parameters) which should be preloaded</p>
+<ul>
+<li>basic conditionals for platform switches</li>
+<li>variable substitution</li>
+<li>invoked <em>after</em> a user says &quot;boot!&quot;; these are not for UI, they're to script the bootstrapping of a microkernel</li>
+</ul>
+</section>
+</main>
+</body>
+</html>
