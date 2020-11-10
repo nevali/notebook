@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en-GB"  dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Task • Mo McRoberts | Music • Broadcasting • Technology</title>
+  <link rel="stylesheet" href="https://neva.li/common/styles.css">
+</head>
+<body>
+<header>
+<h1 class="title">Mo McRoberts</h1>
+<h2 class="subtitle">Music • Broadcasting • Technology</h2>
+</header>
+<main>
+<section class="wiki">
+<h1>Task</h1>
+<h2 id="name">Name</h2>
+<p><code>task</code> — Submit and manage background processing tasks</p>
+<h2 id="synopsis">Synopsis</h2>
+<pre><code>    task create [CREATE-OPTIONS] [VAR=VALUE...] [--] COMMAND [ARGUMENTS ...]
+    task create [CREATE-OPTIONS] [VAR=VALUE...] -f SCRIPT [ARGUMENTS ...]
+    task ls [LIST-OPTIONS] [PATTERN]
+    task rm [REMOVE-OPTIONS] PATTERN
+    task group create [GROUP-CREATE-OPTIONS] [VAR=VALUE...]
+    task group ls [LIST-OPTIONS] [PATTERN]
+    task group rm [REMOVE-OPTIONS] PATTERN
+    task status [STATUS-OPTIONS] [TASK-OR-GROUP]
+    task agent AGENT-OPTIONS
+    task runner RUN-OPTIONS
+    task server [-]
+</code></pre>
+<h2 id="description">Description</h2>
+<p>The <code>task</code> utility allows a user to submit tasks for background processing, list previously-submitted tasks, query their status, and remove them when no longer needed. By default tasks run as the current user on the host the <code>task</code> command is invoked on, however tasks can be submitted and managed on remote hosts via <code>ssh</code>(1), provided the <code>task</code> utility is installed on the remote host, similar to the operation of the <code>rsync</code> utility.</p>
+<h2 id="scope">Scope</h2>
+<p><code>task</code> is a relatively low-level utility intended for general-purpose background processing with minimal overheads, capable of running on the smallest of modern devices and machine types. It does not <em>on its own</em> have capabilities to schedule tasks across clusters of nodes, configure repeating tasks, integrate with cloud services or hosting providers, nor provide a web-based interactive management interface. That said, it ought, without modification, to be suitable for use as an integral component of a larger system which does provide these kinds of facilities.</p>
+<p><code>task</code> is primarily concerned with the case of a single-user (who may or may not be an administrator) on a single host, with remote orchestration a relatively minor extension.</p>
+<p><code>task</code> does, however, deal with inter-dependencies and external constraints: tasks can be created ad-hoc, or part of a related group which has a shared configuration, common conditions (such as a concurrency limitation), and defined tear-down procedures for both successful and unsuccessful runs. Task groups, which are <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">directed acyclic graphs</a>, can be defined in a single file and launched with one command, or alternatively be launched in a suspended state to be modified on-the-fly and triggered later.</p>
+<p>The task processing agent which orchestrates and monitors tasks on an ongoing basis is designed to be as lightweight and unobtrusive as possible, ensuring more resources are dedicated to task processing. Similarly, it does not generally require administrative privileges to run, except when executing tasks which do (or at all, if the task can be executed via <code>sudo</code>(8) configured with an appropriate <code>NOPASSWD</code> option).</p>
+<h2 id="usage">Usage</h2>
+<h3 id="creating-a-task">Creating a task</h3>
+<pre><code>    task create [CREATE-OPTIONS] [VAR=VALUE...] [--] COMMAND [ARGUMENTS ...]
+    task create [CREATE-OPTIONS] [VAR=VALUE...] -f SCRIPT [ARGUMENTS ...]
+</code></pre>
+<p>The first form of the command creates an ad-hoc task using the command and arguments specified. Subject to any options specifying starting conditions or other constraints which may apply, the task may be launched by the processing agent immediately.</p>
+<h2 id="operation">Operation</h2>
+<h3 id="local-operation">Local operation</h3>
+<p>When a <code>task</code> command is invoked and is not targeting a remote host, the utility first checks to see if the task processing agent, described further below, is running for the current user. If it's not, it's launched in the background, and the <code>task</code> utility waits for confirmation that it has started and a connection can be established to it.</p>
+<p>Connections are via a local (Unix domain) socket which resides in a user's home directory, although may be forwarded from a remote host via SSH (see the <em>Remote hosts</em> section below).</p>
+<h3 id="task-processing-agent">Task processing agent</h3>
+<p>The task processing agent is a background process which periodically scans the queue of waiting tasks, launches any whose starting conditions have been satisfied but have not been started, monitors running tasks for changes of state, and waits for commands from the <code>task</code> utility.</p>
+<p>At most one task processing agent runs per user who has tasks queued. The agent terminates itself automatically after a period of inactivity (i.e., no tasks in the queue, and no commands received from the <code>task</code> utility).</p>
+<h3 id="task-runner">Task runner</h3>
+<p>The task runner is invoked by the task processing agent when it is time to begin processing an individual task—i.e., when its starting conditions have been satisfied. The task runner reads the task details from the queue and spawns the processes required to execute it, monitoring and recording its status until its completion or termination.</p>
+<h3 id="remote-hosts">Remote hosts</h3>
+<p>When interacting with a remote host, the <code>task</code> utility attempts to invoke the following command to establish a connection:—</p>
+<pre><code>$ ssh [USERNAME@]HOSTNAME task server -
+</code></pre>
+<p>Any prompts from <code>ssh</code>, such as to add an entry to <code>known_hosts</code> or for authentication, will be presented as normal.</p>
+<p>If successfully invoked, the <code>task</code> utility on the remote host will launch the background agent process described above if it is not already running, and then forward commands and responses between it and the <code>task</code> utility on the local host via the SSH connection.</p>
+<h2 id="files">Files</h2>
+<p>The <code>task</code> utility maintains state by storing data in a <code>~/.task</code> directory (i.e., a directory named <code>.task</code> relative to the user's home directory, as specified by the <code>$HOME</code> environment variable). If this directory is deleted, all task processing state will be lost.</p>
+<p>The task processing agent also creates its control socket within the <code>~/.task</code> directory.</p>
+<p>Temporary files, including the working directories for tasks and common storage areas for task groups, are created within one of the locations specified below, listed in order of preference:—</p>
+<ol>
+<li>Any locations explicitly specified as part of a task or task group</li>
+<li>The location specified by the <code>$TASK_CACHEDIR</code> environment variable</li>
+<li>On Darwin systems (macOS, et al), the location returned by <code>$(getconf DARWIN_USER_CACHE_DIR)</code>, typically a path within <code>/var/folders</code>.</li>
+<li>The location specified by the <code>$TMPDIR</code> environment variable as part of a task or task group itself</li>
+<li>The location specified by the <code>$TMPDIR</code> variable in the task processing agent's own environment</li>
+<li><code>/var/tmp</code>, if it is present and new directories can be created within it</li>
+<li><code>/tmp</code></li>
+</ol>
+<p><code>task</code> is safe to use in scenarios where home directories or cache directories are shared between multiple users or hosts (such as via Ceph or NFS).</p>
+<h2 id="environment-variables">Environment variables</h2>
+<p>The following environment variables are used by the <code>task</code> utility:—</p>
+<p><code>HOME</code> The path to the current user's home directory. A <code>.task</code> directory is created within this path if it does not already exist.</p>
+<p>The task runner always initialises a new environment for the task processes it spawns, and will never copy values from its own environment to the child. The following environment variables are set by the task runner and inherited by task processes:—</p>
+<p><code>TASK_ID</code></p>
+<p><code>TASK_NAME</code></p>
+<p><code>TASK_START</code></p>
+<p><code>TASK_GROUP_ID</code></p>
+<p><code>TASK_GROUP_NAME</code></p>
+<p><code>TASK_CACHEDIR</code></p>
+<p>In addition to these, any environment variables specified by the task group (if the task is part of a group) will be set, and any environment variables specified by the task itself. By default, when creating an ad-hoc task, any environment variables not beginning with the prefix <code>TASK_</code> are stored as part of the task details and copied into the environment by the task runner. This behaviour can be inhibited with the <code>-E</code> option to <code>task create</code>, meaning the task is created with an empty environment, plus any variables which are explicitly specified.</p>
+<p>Finally, the following variables are set by the task runner to default values if they are not set by the task:—</p>
+<p><code>HOME</code></p>
+<p><code>LOGNAME</code></p>
+<p><code>SHELL</code></p>
+<p><code>PATH</code></p>
+<h2 id="output-and-diagnostics">Output and diagnostics</h2>
+<p>The normal outputs of <code>task create</code>, <code>task ls</code>, <code>task group create</code>, <code>task group ls</code>, and <code>task status</code> are written the standard output stream.</p>
+<p>Warning (non-fatal) and error (fatal) messages are written to the standard error stream and in the following format:—</p>
+<pre><code>%TASK-W-&lt;CODE&gt;: Warning message describing a condition which has occurred and to which
+    the user should be alerted.
+
+    This may be continued over multiple indented lines.
+</code></pre>
+<pre><code>%TASK-E-&lt;CODE&gt;: Error message describing the fatal condition which has occurred
+    This may also be continued over multiple indented lines.
+
+    Once an error condition occurs, the task utility will terminate after writing
+    the diagnostic message.
+</code></pre>
+<p><code>&lt;CODE&gt;</code> represents a short alpha-numeric mnemonic identifying the warning or error condition which has occurred to aid in cross-referencing and diagnosis.</p>
+<h2 id="exit-status">Exit status</h2>
+<p>The following exit values are returned:</p>
+<p>0 Successful completion (of the command, not necessarily the task that operations were being performed on).</p>
+<p>10 Unable to start the task processing agent</p>
+<p>11 Unable to connect to the running task processing agent</p>
+<p>12 Failed to read from or write to the <code>~/.task</code> directory</p>
+<p>13 Failed to read from or write to the cache directory</p>
+<p>14 The requested sub-command wasn't understood (e.g., <code>task crete ...</code>)</p>
+<p>15 The script file could not be accessed</p>
+<p>16 The script file could not be parsed</p>
+<p>17 No matches for the pattern specified</p>
+<p>18 The task ID specified doesn't exist</p>
+<p>19 The group ID specified doesn't exist</p>
+<p>20 SSH could not be started</p>
+<p>21 SSH, or the remote task server, returned a failure response</p>
+<p>22 The task processing agent was unable to perform the requested operation</p>
+<h2 id="security-considerations">Security considerations</h2>
+<p><code>task</code> operates at all times as the user who invokes it; it includes no components which must be executed with elevated privileges and is not configured by default to do so. Whilst it does include a server component, access is via a socket which by default is maintained in a location which is restricted to the (invoking) owning user, subject to filesystem capabilities.</p>
+<p>Access from remote hosts rests similarly on the <em>pre-existing</em> ability of users on those hosts to be able to establish an authenticated connection and invoke the <code>task server</code> command.</p>
+<h2 id="see-also">See also</h2>
+<ul>
+<li><code>ssh</code></li>
+<li><code>rsync</code></li>
+<li><code>sudo</code></li>
+<li><code>getconf</code></li>
+<li><code>uux</code></li>
+</ul>
+<h2 id="prior-art">Prior art</h2>
+<ul>
+<li><a href="https://airflow.apache.org/">Apache Airflow</a> (released 2015)</li>
+<li><a href="https://pubs.opengroup.org/onlinepubs/9699919799/xrat/V4_xcu_chap03.html">POSIX Batch Environment Services</a> (introduced 1987, deprecated in 2018)</li>
+<li><a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/batch.html">POSIX <code>batch</code> utility</a> (introduced 1987)</li>
+<li><a href="http://gnqs.sourceforge.net/docs/starter_pack/introducing/index.html">NASA NQS</a> (released 1986)</li>
+<li><a href="wikipedia.org/wiki/UUCP">UUCP</a> (1979; Wikipedia description)</li>
+<li><a href="https://www.ibm.com/support/knowledgecenter/zosbasics/com.ibm.zos.zjcl/zjclt_exercise_crtNsubmittask.htms">IBM JCL</a> (introduced late 1960s)</li>
+</ul>
+</section>
+</main>
+</body>
+</html>
